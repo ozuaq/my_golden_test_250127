@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:my_golden_test/src/app.dart';
-import 'package:my_golden_test/src/theme.dart';
+
+import 'test_theme.dart';
 
 class TestApp extends StatelessWidget {
   const TestApp({
     super.key,
     required this.screen,
+    this.theme,
   });
 
   final Widget screen;
+  final ThemeData? theme;
 
   @override
   Widget build(BuildContext context) {
-    final testTheme = ThemeData(
-      colorScheme: myTheme.colorScheme,
-      useMaterial3: myTheme.useMaterial3,
-    );
-
-    return MyApp(
-      screen: screen,
-      theme: testTheme,
+    return MaterialApp(
+      title: 'Golden Test',
+      theme: theme ?? testTheme,
+      home: screen,
     );
   }
 }

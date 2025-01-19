@@ -39,19 +39,14 @@ class GoldenTestUtil {
         : stackTraceStr;
   }
 
-  static Future<void> expectGoldenFile(
-      {required Finder target,
-      required String fileName,
-      bool isScreenshotEnabled = false}) async {
-    if (autoUpdateGoldenFiles && isScreenshotEnabled) {
+  static Future<void> expectGoldenFile({
+    required Finder target,
+    required String fileName,
+  }) async {
+    if (autoUpdateGoldenFiles) {
       await expectLater(target,
           matchesGoldenFile('$screenshotDirRelativesPath/$fileName.png'));
       return;
-    }
-
-    if (_loadAssetsCalled) {
-      throw GoldenTestUtilException('スクリーンショットが無効の場合、カスタムフォントをロードしないでください。\n'
-          'loadAssetsが呼び出された場所:\n$_loadAssetsStackTrace');
     }
 
     await expectLater(
