@@ -27,6 +27,9 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   fonts:
+    - family: Ahem
+      fonts:
+        - asset: assets/fonts/Ahem.ttf
     - family: NotoSansJP
       fonts:
         - asset: assets/fonts/NotoSansJP-Thin.ttf

@@ -3,15 +3,27 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+enum FontLoadState {
+  ahem,
+  theme,
+}
+
 class GoldenTestUtil {
   static const screenshotDirRelativesPath = 'screenshots';
   static const goldenImgDirRelativesPath = 'goldens';
-  static bool _loadAssetsCalled = false;
+  static const _ahemKey = 'assets/fonts/Ahem.ttf';
+  static FontLoadState _fontLoadState = FontLoadState.ahem;
 
-  static Future<void> loadAssets() async {
-    if (_loadAssetsCalled) {
+  static Future<void> loadAssets({bool isScreenshot = false}) async {
+    if (isScreenshot && _fontLoadState == FontLoadState.theme) {
       return;
     }
+
+    if (!isScreenshot && _fontLoadState == FontLoadState.ahem) {
+      return;
+    }
+
+    TestWidgetsFlutterBinding.ensureInitialized();
 
     final bundle = rootBundle;
     final fontManifestString = await bundle.loadString('FontManifest.json');
@@ -25,12 +37,20 @@ class GoldenTestUtil {
       final loader = FontLoader(family);
       for (final font in fonts) {
         final asset = font['asset'] as String;
-        loader.addFont(bundle.load(asset));
+        if (isScreenshot) {
+          loader.addFont(bundle.load(asset));
+        } else {
+          loader.addFont(bundle.load(_ahemKey));
+        }
       }
 
       await loader.load();
 
-      _loadAssetsCalled = true;
+      if (isScreenshot) {
+        _fontLoadState = FontLoadState.theme;
+      } else {
+        _fontLoadState = FontLoadState.ahem;
+      }
     }
   }
 
