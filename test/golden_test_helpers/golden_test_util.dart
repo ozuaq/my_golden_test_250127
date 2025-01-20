@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -5,38 +7,31 @@ class GoldenTestUtil {
   static const screenshotDirRelativesPath = 'screenshots';
   static const goldenImgDirRelativesPath = 'goldens';
   static bool _loadAssetsCalled = false;
-  static String? _loadAssetsStackTrace;
 
   static Future<void> loadAssets() async {
     if (_loadAssetsCalled) {
       return;
     }
 
-    TestWidgetsFlutterBinding.ensureInitialized();
+    final bundle = rootBundle;
+    final fontManifestString = await bundle.loadString('FontManifest.json');
+    final fontManifest = (json.decode(fontManifestString) as List<dynamic>)
+        .map((dynamic x) => x as Map<String, dynamic>);
 
-    final loader = FontLoader('NotoSansJP')
-      ..addFont(rootBundle.load('assets/fonts/NotoSansJP-Thin.ttf'))
-      ..addFont(rootBundle.load('assets/fonts/NotoSansJP-ExtraLight.ttf'))
-      ..addFont(rootBundle.load('assets/fonts/NotoSansJP-Light.ttf'))
-      ..addFont(rootBundle.load('assets/fonts/NotoSansJP-Regular.ttf'))
-      ..addFont(rootBundle.load('assets/fonts/NotoSansJP-Medium.ttf'))
-      ..addFont(rootBundle.load('assets/fonts/NotoSansJP-SemiBold.ttf'))
-      ..addFont(rootBundle.load('assets/fonts/NotoSansJP-Bold.ttf'))
-      ..addFont(rootBundle.load('assets/fonts/NotoSansJP-ExtraBold.ttf'))
-      ..addFont(rootBundle.load('assets/fonts/NotoSansJP-Black.ttf'));
+    for (final entry in fontManifest) {
+      final family = entry['family'] as String;
+      final fonts = entry['fonts'] as List<dynamic>;
 
-    await loader.load();
+      final loader = FontLoader(family);
+      for (final font in fonts) {
+        final asset = font['asset'] as String;
+        loader.addFont(bundle.load(asset));
+      }
 
-    _loadAssetsCalled = true;
-    final stackTraceStr = StackTrace.current.toString();
-    final stackLines = stackTraceStr.split('\n');
+      await loader.load();
 
-    final matchingLine =
-        stackLines.where((line) => line.contains('_test.dart')).firstOrNull;
-
-    _loadAssetsStackTrace = matchingLine != null
-        ? matchingLine.replaceAll(RegExp(r'#\d+\s+'), '')
-        : stackTraceStr;
+      _loadAssetsCalled = true;
+    }
   }
 
   static Future<void> expectGoldenFile({
@@ -52,13 +47,4 @@ class GoldenTestUtil {
     await expectLater(
         target, matchesGoldenFile('$goldenImgDirRelativesPath/$fileName.png'));
   }
-}
-
-class GoldenTestUtilException implements Exception {
-  final String message;
-
-  GoldenTestUtilException(this.message);
-
-  @override
-  String toString() => "GoldenTestUtilException: $message";
 }
