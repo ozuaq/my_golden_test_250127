@@ -1,21 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'device.dart';
-import 'golden_test_util.dart';
+import '../test_helpers/test_app.dart';
+import 'screen_size.dart';
 
-// TODO: テスト実装
-class DeviceBuilder {
-  static Future<void> setUpDevice(
-      {required WidgetTester tester,
-      Device device = Device.phone,
-      bool isScreenshot = false}) async {
+class ScreenBuilder {
+  static TestApp build(
+      {required TestApp app, ScreenSize screenSize = ScreenSize.smartPhone}) {
+    final binding = TestWidgetsFlutterBinding.ensureInitialized();
+    binding.window.physicalSizeTestValue = screenSize.size;
+    binding.window.devicePixelRatioTestValue = 1.0;
+
     addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
+      binding.window.clearPhysicalSizeTestValue();
+      binding.window.clearDevicePixelRatioTestValue();
     });
 
-    await GoldenTestUtil.loadAssets(isScreenshot: isScreenshot);
-
-    tester.view.physicalSize = device.size;
-    tester.view.devicePixelRatio = device.devicePixelRatio;
+    return app;
   }
 }

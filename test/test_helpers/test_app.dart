@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-
-import 'test_theme.dart';
+import 'package:my_golden_test/src/theme.dart';
 
 class TestApp extends StatelessWidget {
   const TestApp({
     super.key,
-    required this.screen,
+    required this.home,
     this.theme,
   });
 
-  final Widget screen;
+  final Widget home;
   final ThemeData? theme;
 
   @override
@@ -17,8 +16,8 @@ class TestApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Golden Test',
-      theme: theme ?? testTheme,
-      home: screen,
+      theme: theme ?? myTheme,
+      home: home,
     );
   }
 }

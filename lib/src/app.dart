@@ -4,19 +4,19 @@ import 'package:my_golden_test/src/theme.dart';
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
-    required this.screen,
+    required this.home,
     this.theme,
   });
 
-  final Widget screen;
+  final Widget home;
   final ThemeData? theme;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Golden Test',
+      title: 'My App',
       theme: theme ?? myTheme,
-      home: screen,
+      home: home,
     );
   }
 }
