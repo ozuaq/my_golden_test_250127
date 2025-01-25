@@ -66,13 +66,21 @@ class _CountScreenState extends State<CountScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '太文字で表',
+              'プラスボタンを押してカウントアップ',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
+            const SizedBox(height: 10),
+            Text(
+              'リセットボタンを押してカウントリセット',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 10),
             const Text(
-              'ボタンを押した回数:',
+              '現在のカウント:',
             ),
             Text(
               '$_counter',

@@ -46,7 +46,8 @@ class GoldenTestUtil {
       return;
     }
     if (_isCustomFontLoaded) {
-      return;
+      throw Exception(
+          'カスタムフォントが読み込まれているため、Golden Testを実行できません。Goldenファイル更新の場合は、テスト実行時に--update-goldensオプションを指定してください。');
     }
 
     await expectLater(
