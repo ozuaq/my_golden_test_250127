@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:my_golden_test/src/screens/count_screen.dart';
 import 'package:my_golden_test/src/theme.dart';
 
-import '../golden_test_helpers/screen_builder.dart';
-import '../golden_test_helpers/golden_test_util.dart';
-import '../test_helpers/test_app.dart';
+import '../../golden_test_helpers/golden_test_util.dart';
+import '../../test_helpers/test_app.dart';
 
 void main() {
   group('CountScreen', () {
@@ -17,25 +16,34 @@ void main() {
       }
     }
 
-    testWidgets('カウント画面が表示される', (WidgetTester tester) async {
-      await tester.pumpWidget(ScreenBuilder.build(
-          app: TestApp(
+    // setUpAll(() async {
+    //   autoUpdateGoldenFiles = true;
+    //   // await GoldenTestUtil.loadAssets();
+    // });
+
+    // tearDownAll(() {
+    //   autoUpdateGoldenFiles = false;
+    // });
+
+    testWidgets('カウント画面が表示される', GoldenTestUtil.testWidgetsCallback(
+        callback: (WidgetTester tester) async {
+      await tester.pumpWidget(TestApp(
         theme: myTheme,
         home: const CountScreen(),
-      )));
+      ));
 
       await GoldenTestUtil.expectGoldenFile(
         target: find.byType(TestApp),
         fileName: 'count_screen',
       );
-    });
+    }));
 
-    testWidgets('プラスボタンを押すとカウントが増える', (WidgetTester tester) async {
-      await tester.pumpWidget(ScreenBuilder.build(
-          app: TestApp(
+    testWidgets('プラスボタンを押すとカウントが増える', GoldenTestUtil.testWidgetsCallback(
+        callback: (WidgetTester tester) async {
+      await tester.pumpWidget(TestApp(
         theme: myTheme,
         home: const CountScreen(),
-      )));
+      ));
 
       await incrementCounter(tester: tester, incrementValue: 2);
       expect(find.text('2'), findsOneWidget);
@@ -44,15 +52,15 @@ void main() {
         target: find.byType(TestApp),
         fileName: 'count_screen_increment_count',
       );
-    });
+    }));
 
     testWidgets('カウントが1以上のとき、リセットボタンを押すと、ダイアログを表示する',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(ScreenBuilder.build(
-          app: TestApp(
+        GoldenTestUtil.testWidgetsCallback(
+            callback: (WidgetTester tester) async {
+      await tester.pumpWidget(TestApp(
         theme: myTheme,
         home: const CountScreen(),
-      )));
+      ));
 
       await incrementCounter(tester: tester, incrementValue: 1);
       expect(find.text('1'), findsOneWidget);
@@ -66,14 +74,15 @@ void main() {
         target: find.byType(TestApp),
         fileName: 'count_screen_show_dialog',
       );
-    });
+    }));
 
-    testWidgets('カウントが0のとき、リセットボタンを押しても、何も起こらない', (WidgetTester tester) async {
-      await tester.pumpWidget(ScreenBuilder.build(
-          app: TestApp(
+    testWidgets('カウントが0のとき、リセットボタンを押しても、何も起こらない',
+        GoldenTestUtil.testWidgetsCallback(
+            callback: (WidgetTester tester) async {
+      await tester.pumpWidget(TestApp(
         theme: myTheme,
         home: const CountScreen(),
-      )));
+      ));
 
       expect(find.text('0'), findsOneWidget);
 
@@ -81,15 +90,15 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(AlertDialog), findsNothing);
-    });
+    }));
 
     testWidgets('カウントリセットの確認ダイアログでリセットを押したら、カウントを0にする',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(ScreenBuilder.build(
-          app: TestApp(
+        GoldenTestUtil.testWidgetsCallback(
+            callback: (WidgetTester tester) async {
+      await tester.pumpWidget(TestApp(
         theme: myTheme,
         home: const CountScreen(),
-      )));
+      ));
 
       await incrementCounter(tester: tester, incrementValue: 1);
       expect(find.text('1'), findsOneWidget);
@@ -109,15 +118,15 @@ void main() {
         target: find.byType(TestApp),
         fileName: 'count_screen_reset_count',
       );
-    });
+    }));
 
     testWidgets('カウントリセットの確認ダイアログでキャンセルを押したら、カウントを0にしない',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(ScreenBuilder.build(
-          app: TestApp(
+        GoldenTestUtil.testWidgetsCallback(
+            callback: (WidgetTester tester) async {
+      await tester.pumpWidget(TestApp(
         theme: myTheme,
         home: const CountScreen(),
-      )));
+      ));
 
       await incrementCounter(tester: tester, incrementValue: 1);
       expect(find.text('1'), findsOneWidget);
@@ -137,6 +146,6 @@ void main() {
         target: find.byType(TestApp),
         fileName: 'count_screen_reset_count_cancelled',
       );
-    });
+    }));
   });
 }

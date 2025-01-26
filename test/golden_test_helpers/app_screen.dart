@@ -1,17 +1,17 @@
 import 'dart:ui';
 
-class ScreenSize {
-  const ScreenSize({
+class AppScreen {
+  const AppScreen({
     required this.size,
   });
 
   final Size size;
 
-  static const ScreenSize smartPhone = ScreenSize(
+  static const AppScreen smartPhone = AppScreen(
     size: Size(400, 800),
   );
 
-  static const ScreenSize web = ScreenSize(
+  static const AppScreen web = AppScreen(
     size: Size(800, 600),
   );
 }

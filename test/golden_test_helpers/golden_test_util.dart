@@ -1,12 +1,37 @@
 import 'dart:convert';
 
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'app_screen.dart';
 
 class GoldenTestUtil {
   static const screenshotDirRelativesPath = 'screenshots';
   static const goldenImgDirRelativesPath = 'goldens';
   static bool _isCustomFontLoaded = false;
+
+  static Future<void> Function(WidgetTester) testWidgetsCallback(
+      {required Future<void> Function(WidgetTester) callback,
+      AppScreen screenSize = AppScreen.smartPhone}) {
+    return (WidgetTester tester) async {
+      tester.view.physicalSize = screenSize.size;
+      tester.view.devicePixelRatio = 1.0;
+
+      if (_isCustomFontLoaded) {
+        debugDisableShadows = false;
+      }
+
+      await callback(tester);
+
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+
+      if (_isCustomFontLoaded) {
+        debugDisableShadows = true;
+      }
+    };
+  }
 
   static Future<void> loadAssets() async {
     if (_isCustomFontLoaded) {
