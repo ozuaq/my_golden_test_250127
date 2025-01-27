@@ -16,14 +16,14 @@ void main() {
       }
     }
 
-    // setUpAll(() async {
-    //   autoUpdateGoldenFiles = true;
-    //   // await GoldenTestUtil.loadAssets();
-    // });
+    setUpAll(() async {
+      autoUpdateGoldenFiles = true;
+      await GoldenTestUtil.loadAssets();
+    });
 
-    // tearDownAll(() {
-    //   autoUpdateGoldenFiles = false;
-    // });
+    tearDownAll(() {
+      autoUpdateGoldenFiles = false;
+    });
 
     testWidgets('カウント画面が表示される', GoldenTestUtil.testWidgetsCallback(
         callback: (WidgetTester tester) async {

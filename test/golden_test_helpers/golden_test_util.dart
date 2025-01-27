@@ -13,9 +13,9 @@ class GoldenTestUtil {
 
   static Future<void> Function(WidgetTester) testWidgetsCallback(
       {required Future<void> Function(WidgetTester) callback,
-      AppScreen screenSize = AppScreen.smartPhone}) {
+      AppScreen appScreen = AppScreen.smartPhone}) {
     return (WidgetTester tester) async {
-      tester.view.physicalSize = screenSize.size;
+      tester.view.physicalSize = appScreen.size;
       tester.view.devicePixelRatio = 1.0;
 
       if (_isCustomFontLoaded) {
